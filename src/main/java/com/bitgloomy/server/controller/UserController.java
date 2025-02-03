@@ -46,6 +46,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody RequestLoginDTO requestLoginDTO, HttpServletRequest request){
         User user = new User();
+        System.out.println(requestLoginDTO.getId());
+        System.out.println(requestLoginDTO.getPassword());
         user.setId(requestLoginDTO.getId());
         user.setPassword(requestLoginDTO.getPassword());
         try {
@@ -53,7 +55,8 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userUid",foundUser.getUid());
             session.setAttribute("auth",foundUser.getAuth());
-            return ResponseEntity.status(HttpStatus.OK).build();
+            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\"}", foundUser.getUid(), foundUser.getAuth());
+            return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
