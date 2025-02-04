@@ -12,7 +12,7 @@ public class Product {
     private int quantity;
     private String deleteyn;
     private String category;
-
+    private String imgURL;
     public int getUid() {
         return uid;
     }
@@ -99,5 +99,13 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 }

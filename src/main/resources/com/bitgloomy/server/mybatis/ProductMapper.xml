@@ -15,6 +15,7 @@
         <result column="quantity" property="quantity"/>
         <result column="deleteyn" property="deleteyn"/>
         <result column="category" property="category"/>
+        <result column="img_url" property="imgURL"/>
     </resultMap>
     <insert id="saveProduct">
         INSERT INTO product(pname,contents,product_material,fabric,size,price,quantity,category)
@@ -24,6 +25,8 @@
         SELECT * FROM product WHERE pname=#{pname};
     </select>
     <select id="findAllProducts" resultMap="productMap">
-        SELECT * FROM product WHERE deleteyn='n';
+        SELECT product.*, product_img.img_url FROM product
+        JOIN product_img ON product.uid = product_img.product_uid
+        WHERE deleteyn='n';
     </select>
 </mapper>
