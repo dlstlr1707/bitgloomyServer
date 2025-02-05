@@ -15,17 +15,33 @@
         <result column="quantity" property="quantity"/>
         <result column="deleteyn" property="deleteyn"/>
         <result column="category" property="category"/>
+        <result column="similar_product_name" property="similarProductName"/>
+        <result column="similar_img_url" property="similarImgUrl"/>
         <result column="img_url" property="imgURL"/>
+        <result column="sub_img_url_1" property="subImgUrl1"/>
+        <result column="sub_img_url_2" property="subImgUrl2"/>
+        <result column="sub_img_url_3" property="subImgUrl3"/>
+        <result column="sub_img_url_4" property="subImgUrl4"/>
+        <result column="sub_img_url_5" property="subImgUrl5"/>
+        <result column="sub_img_url_6" property="subImgUrl6"/>
+        <result column="sub_img_url_7" property="subImgUrl7"/>
+        <result column="sub_img_url_8" property="subImgUrl8"/>
+        <result column="sub_img_url_9" property="subImgUrl9"/>
+        <result column="sub_img_url_10" property="subImgUrl10"/>
     </resultMap>
     <insert id="saveProduct">
         INSERT INTO product(pname,contents,product_material,fabric,size,price,quantity,category)
         VALUES(#{pname},#{contents},#{productMaterial},#{fabric},#{size},#{price},#{quantity},#{category});
     </insert>
     <select id="findProductByPname" resultMap="productMap">
-        SELECT * FROM product WHERE pname=#{pname};
+        SELECT product.*,product_img.similar_product_name, product_img.similar_img_url,product_img.img_url, product_img.sub_img_url_1, product_img.sub_img_url_2, product_img.sub_img_url_3, product_img.sub_img_url_4, product_img.sub_img_url_5, product_img.sub_img_url_6, product_img.sub_img_url_7, product_img.sub_img_url_8, product_img.sub_img_url_9, product_img.sub_img_url_10
+        FROM product
+        JOIN product_img ON product.uid = product_img.product_uid
+        WHERE pname=#{pname} AND deleteyn='n';
     </select>
     <select id="findAllProducts" resultMap="productMap">
-        SELECT product.*, product_img.img_url FROM product
+        SELECT product.*,product_img.img_url
+        FROM product
         JOIN product_img ON product.uid = product_img.product_uid
         WHERE deleteyn='n';
     </select>

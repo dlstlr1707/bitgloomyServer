@@ -3,17 +3,13 @@ package com.bitgloomy.server.controller;
 import com.bitgloomy.server.domain.Product;
 import com.bitgloomy.server.dto.RequestUploadProductDTO;
 import com.bitgloomy.server.service.ProductService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @RestController
@@ -24,9 +20,15 @@ public class ProductController {
         this.productService = productService;
     }
     @PostMapping("/product")
-    public ResponseEntity<?> uploadProduct(@RequestBody RequestUploadProductDTO requestUploadProductDTO){
+    public ResponseEntity<?> uploadProduct(@RequestBody RequestUploadProductDTO requestUploadProductDTO,@RequestParam("file") MultipartFile file){
         // 추후 권한 확인하는 코드 추가 예정
         // 이미지 파일 받아서 서버에 저장후 DB에 경로 저장 부분 추가 할 것
+        String resultURL;
+        try {
+            resultURL = productService.save(file);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         Product product = new Product();
         product.setPname(requestUploadProductDTO.getPname());
         product.setContents(requestUploadProductDTO.getContents());
@@ -36,6 +38,7 @@ public class ProductController {
         product.setPrice(requestUploadProductDTO.getPrice());
         product.setQuantity(requestUploadProductDTO.getQuantity());
         product.setCategory(requestUploadProductDTO.getCategory());
+        product.setImgURL(resultURL);
         try {
             productService.saveProduct(product);
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -56,5 +59,13 @@ public class ProductController {
         }
 
     }
-
+    @GetMapping("/detail/{pname}")
+    public ResponseEntity<?> findProductByPname(@PathVariable(value = "pname")String pname){
+        try {
+            Product foundProduct = productService.findProductByPname(pname);
+            return ResponseEntity.status(HttpStatus.OK).body(foundProduct);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
