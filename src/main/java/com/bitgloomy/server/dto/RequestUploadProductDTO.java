@@ -6,8 +6,8 @@ public class RequestUploadProductDTO {
     private String productMaterial;
     private String fabric;
     private String size;
-    private int price;
-    private int quantity;
+    private String price;
+    private String quantity;
     private String category;
 
     public String getPname() {
@@ -50,19 +50,19 @@ public class RequestUploadProductDTO {
         this.size = size;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

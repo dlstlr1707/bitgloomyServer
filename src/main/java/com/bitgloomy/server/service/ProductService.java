@@ -52,6 +52,15 @@ public class ProductService {
         }
         productMapper.saveProduct(product);
     }
+    public void saveProductImg(Product product) throws Exception {
+        Product foundProduct = productMapper.findProductUidByPname(product.getPname());
+        if(foundProduct == null){
+            throw new Exception();
+        }
+        product.setUid(foundProduct.getUid());
+        product.getProductImg().setUid(foundProduct.getUid());
+        productMapper.saveProductImg(product);
+    }
     public Product findProductByPname(String pname) throws Exception {
         Product foundProduct = productMapper.findProductByPname(pname);
         if(foundProduct != null){
