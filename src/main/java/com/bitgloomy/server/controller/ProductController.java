@@ -50,6 +50,7 @@ public class ProductController {
         product.setProductImg(productImg);
         try {
             productService.saveProduct(product);
+            product.getProductImg().setSimilarProductName(requestUploadProductDTO.getSimilarProductName());
             product.getProductImg().setImgURL(mainImgURL);
             product.getProductImg().setSubImgUrl1(subImgURL.get(0));
             product.getProductImg().setSubImgUrl2(subImgURL.get(1));

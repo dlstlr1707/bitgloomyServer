@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -57,9 +58,23 @@ public class ProductService {
         if(foundProduct == null){
             throw new Exception();
         }
-        product.setUid(foundProduct.getUid());
         product.getProductImg().setUid(foundProduct.getUid());
+        // 관련상품의 이미지 가져와서 product에 셋팅하는 코드 있어야함
+        product.getProductImg().setSimilarImgUrl(findSimilarProductImgURL(product.getProductImg().getSimilarProductName()));
         productMapper.saveProductImg(product);
+    }
+    public String findSimilarProductImgURL(String similarProductName)throws Exception{
+        // 구분자(,)로 구성된 String 분할해서 String으로 url가져와서 구분자(,)로 다시 리팩후 응답
+        if(similarProductName == null){
+            throw new Exception();
+        }
+        String[] splitStringArr = similarProductName.split(",");
+        String silimarProductImgURL="";
+        for(int i=0; i<splitStringArr.length;i++){
+            Product foundSimilarProduct = productMapper.findProductByPname(splitStringArr[i]);
+            silimarProductImgURL = silimarProductImgURL+","+foundSimilarProduct.getProductImg().getImgURL();
+        }
+        return silimarProductImgURL;
     }
     public Product findProductByPname(String pname) throws Exception {
         Product foundProduct = productMapper.findProductByPname(pname);

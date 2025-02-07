@@ -9,6 +9,7 @@ public class RequestUploadProductDTO {
     private String price;
     private String quantity;
     private String category;
+    private String similarProductName;
 
     public String getPname() {
         return pname;
@@ -72,5 +73,13 @@ public class RequestUploadProductDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getSimilarProductName() {
+        return similarProductName;
+    }
+
+    public void setSimilarProductName(String similarProductName) {
+        this.similarProductName = similarProductName;
     }
 }
