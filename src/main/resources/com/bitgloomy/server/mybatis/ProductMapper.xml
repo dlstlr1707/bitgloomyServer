@@ -33,6 +33,32 @@
             <result column="sub_img_url_10" property="subImgUrl10"></result>
         </association>
     </resultMap>
+    <resultMap id="cartMap" type="com.bitgloomy.server.domain.Cart">
+        <id column="uid" property="uid"/>
+        <result column="user_uid" property="userUid"/>
+        <result column="product_uid" property="productUid"/>
+        <result column="product_name" property="productName"/>
+        <result column="amount" property="amount"/>
+        <result column="price" property="price"/>
+        <result column="size" property="size"/>
+        <association property="productImg" javaType="com.bitgloomy.server.domain.ProductImg">
+            <id column="uid" property="uid"></id>
+            <result column="product_id" property="productUid"></result>
+            <result column="similar_product_name" property="similarProductName"></result>
+            <result column="similar_img_url" property="similarImgUrl"></result>
+            <result column="img_url" property="imgURL"></result>
+            <result column="sub_img_url_1" property="subImgUrl1"></result>
+            <result column="sub_img_url_2" property="subImgUrl2"></result>
+            <result column="sub_img_url_3" property="subImgUrl3"></result>
+            <result column="sub_img_url_4" property="subImgUrl4"></result>
+            <result column="sub_img_url_5" property="subImgUrl5"></result>
+            <result column="sub_img_url_6" property="subImgUrl6"></result>
+            <result column="sub_img_url_7" property="subImgUrl7"></result>
+            <result column="sub_img_url_8" property="subImgUrl8"></result>
+            <result column="sub_img_url_9" property="subImgUrl9"></result>
+            <result column="sub_img_url_10" property="subImgUrl10"></result>
+        </association>
+    </resultMap>
     <insert id="saveProduct">
         INSERT INTO product(pname,contents,product_material,fabric,size,price,quantity,category)
         VALUES(#{pname},#{contents},#{productMaterial},#{fabric},#{size},#{price},#{quantity},#{category});
@@ -58,4 +84,21 @@
         JOIN product_img ON product.uid = product_img.product_uid
         WHERE deleteyn='n';
     </select>
+    <insert id="addCart" >
+        INSERT INTO cart(user_uid,product_uid,product_name,amount,price,size)
+        VALUES(#{userUid},#{productUid},#{productName},#{amount},#{price},#{size});
+    </insert>
+    <select id="findAllCarts" resultMap="cartMap">
+        SELECT cart.*,product_img.img_url
+        FROM cart
+        JOIN product_img ON cart.product_uid = product_img.product_uid
+        WHERE user_uid=#{uid};
+    </select>
+    <update id="modifyCart">
+        UPDATE cart SET amount = #{amount} , price = #{price}
+        WHERE uid = #{uid};
+    </update>
+    <delete id="deleteCart">
+        DELETE FROM cart WHERE uid = #{uid};
+    </delete>
 </mapper>

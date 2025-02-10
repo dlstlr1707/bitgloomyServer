@@ -25,4 +25,8 @@
     <select id="findUserById">
         SELECT * FROM user WHERE id=#{id};
     </select>
+    <update id="deleteUser">
+        UPDATE user SET account_status = 'deleted'
+        WHERE uid = #{uid};
+    </update>
 </mapper>

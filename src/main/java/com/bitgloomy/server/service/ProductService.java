@@ -2,7 +2,10 @@ package com.bitgloomy.server.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.bitgloomy.server.domain.Cart;
 import com.bitgloomy.server.domain.Product;
+import com.bitgloomy.server.dto.RequestAddCartDTO;
+import com.bitgloomy.server.dto.RequestModifyCartDTO;
 import com.bitgloomy.server.mybatis.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -90,5 +92,39 @@ public class ProductService {
             throw new Exception();
         }
         return resultArr;
+    }
+    public void addCart(RequestAddCartDTO requestAddCartDTO)throws Exception{
+        // 이미 카트에 해당상품 있으면 에러
+        Cart cart = new Cart();
+        cart.setUserUid(Integer.parseInt(requestAddCartDTO.getUserUid()));
+        cart.setProductUid(requestAddCartDTO.getProductUid());
+        cart.setProductName(requestAddCartDTO.getProductName());
+        String[] tempSize = requestAddCartDTO.getSize().split(",");
+        String[] tempAmount = requestAddCartDTO.getAmount().split(",");
+        String[] tempPrice = requestAddCartDTO.getPrice().split(",");
+        for(int i=0;i<tempSize.length;i++){
+            System.out.println(tempSize[i]);
+            cart.setAmount(Integer.parseInt(tempAmount[i]));
+            cart.setPrice(Integer.parseInt(tempPrice[i]));
+            cart.setSize(tempSize[i]);
+            productMapper.addCart(cart);
+        }
+    }
+    public ArrayList<Cart> findAllCarts(int uid) throws Exception {
+        ArrayList<Cart> resultArr = productMapper.findAllCarts(uid);
+        if(resultArr.isEmpty()){
+            throw new Exception();
+        }
+        return resultArr;
+    }
+    public void modifyCart(RequestModifyCartDTO requestModifyCartDTO){
+        Cart cart = new Cart();
+        cart.setUid(requestModifyCartDTO.getUid());
+        cart.setAmount(Integer.parseInt(requestModifyCartDTO.getAmount()));
+        cart.setPrice(Integer.parseInt(requestModifyCartDTO.getPrice()));
+        productMapper.modifyCart(cart);
+    }
+    public void deleteCart(int uid){
+        productMapper.deleteCart(uid);
     }
 }

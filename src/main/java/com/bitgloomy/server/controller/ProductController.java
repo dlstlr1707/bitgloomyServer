@@ -1,9 +1,14 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.domain.Cart;
 import com.bitgloomy.server.domain.Product;
 import com.bitgloomy.server.domain.ProductImg;
+import com.bitgloomy.server.dto.RequestAddCartDTO;
+import com.bitgloomy.server.dto.RequestModifyCartDTO;
 import com.bitgloomy.server.dto.RequestUploadProductDTO;
 import com.bitgloomy.server.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +29,13 @@ public class ProductController {
     }
     @Transactional
     @PostMapping("/product")
-    public ResponseEntity<?> uploadProduct(@RequestPart(value = "mainImg") MultipartFile file, @RequestPart(value = "subImg") List<MultipartFile> files, @RequestPart(value = "productInfo") RequestUploadProductDTO requestUploadProductDTO){
+    public ResponseEntity<?> uploadProduct(@RequestPart(value = "mainImg") MultipartFile file, @RequestPart(value = "subImg") List<MultipartFile> files, @RequestPart(value = "productInfo") RequestUploadProductDTO requestUploadProductDTO, HttpServletRequest request){
         // 추후 권한 확인하는 코드 추가 예정
+        HttpSession session = request.getSession(false);
+        if(session==null || session.getAttribute("auth")!="role_admin"){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         String mainImgURL;
         List<String> subImgURL = new ArrayList<>();
         try {
@@ -71,9 +81,6 @@ public class ProductController {
     }
     @GetMapping("/products")
     public ResponseEntity<?> findAllProducts(){
-        // DB에 저장된 이미지 경로 클라에 응답 추가 할 것
-        // url 경로를 서버가 따로 서빙 해주고 json으로 url만 전달하게 변경
-        // 이미지 등록시 url 서빙(절대경로에서 외부 접속가능하게) 해서 저장하도록
         try {
             ArrayList<Product> productsList = productService.findAllProducts();
             return ResponseEntity.status(HttpStatus.OK).body(productsList);
@@ -88,6 +95,63 @@ public class ProductController {
             Product foundProduct = productService.findProductByPname(pname);
             return ResponseEntity.status(HttpStatus.OK).body(foundProduct);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PostMapping("/cart")
+    public ResponseEntity<?> addCart(@RequestBody RequestAddCartDTO requestAddCartDTO,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            productService.addCart(requestAddCartDTO);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+    }
+    @GetMapping("/carts/{uid}")
+    public ResponseEntity<?> findAllCarts(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            ArrayList<Cart> cartsList = productService.findAllCarts(uid);
+            return ResponseEntity.status(HttpStatus.OK).body(cartsList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PatchMapping("/cart")
+    public ResponseEntity<?> modifyCartInfo(@RequestBody RequestModifyCartDTO requestModifyCartDTO,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            productService.modifyCart(requestModifyCartDTO);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @DeleteMapping("/cart/{uid}")
+    public ResponseEntity<?> modifyCartInfo(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            productService.deleteCart(uid);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

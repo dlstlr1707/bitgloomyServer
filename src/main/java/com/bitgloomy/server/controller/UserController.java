@@ -69,4 +69,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        session.invalidate();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/users/{uid}")
+    public ResponseEntity<?> deletePost(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        if(session==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        userService.deleteUser(uid);
+        session.invalidate();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

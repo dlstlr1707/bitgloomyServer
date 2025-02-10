@@ -33,4 +33,7 @@ public class UserService {
             throw new Exception();
         }
     }
+    public void deleteUser(int uid) {
+        userMapper.deleteUser(uid);
+    }
 }
