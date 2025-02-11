@@ -101,4 +101,7 @@
     <delete id="deleteCart">
         DELETE FROM cart WHERE uid = #{uid};
     </delete>
+    <delete id="deleteAllCart">
+        DELETE FROM cart WHERE user_uid = #{userUid};
+    </delete>
 </mapper>

@@ -142,13 +142,27 @@ public class ProductController {
         }
     }
     @DeleteMapping("/cart/{uid}")
-    public ResponseEntity<?> modifyCartInfo(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+    public ResponseEntity<?> deleteCart(@PathVariable(value = "uid")int uid,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if(session==null){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try {
             productService.deleteCart(uid);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @DeleteMapping("/carts/{userUid}")
+    public ResponseEntity<?> deleteAllCart(@PathVariable(value = "userUid")String userUid,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null || session.getAttribute("userUid").equals(userUid)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            productService.deleteAllCart(Integer.parseInt(userUid));
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();

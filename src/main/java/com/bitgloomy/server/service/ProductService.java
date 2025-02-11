@@ -127,4 +127,5 @@ public class ProductService {
     public void deleteCart(int uid){
         productMapper.deleteCart(uid);
     }
+    public void deleteAllCart(int userUid){ productMapper.deleteAllCart(userUid); }
 }

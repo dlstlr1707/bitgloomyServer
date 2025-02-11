@@ -17,4 +17,5 @@ public interface ProductMapper {
     ArrayList<Cart> findAllCarts(int uid);
     void modifyCart(Cart cart);
     void deleteCart(int uid);
+    void deleteAllCart(int userUid);
 }
