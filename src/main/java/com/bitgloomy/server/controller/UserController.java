@@ -1,6 +1,7 @@
 package com.bitgloomy.server.controller;
 
 import com.bitgloomy.server.domain.User;
+import com.bitgloomy.server.domain.UserProfile;
 import com.bitgloomy.server.dto.RequestJoinDTO;
 import com.bitgloomy.server.dto.RequestLoginDTO;
 import com.bitgloomy.server.service.UserService;
@@ -87,6 +88,19 @@ public class UserController {
         userService.deleteUser(uid);
         session.invalidate();
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @PostMapping("/profile/{uid}")
+    public ResponseEntity<?> findUserProfile(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        if(session==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            UserProfile userProfile = userService.findUserProfile(uid);
+            return ResponseEntity.status(HttpStatus.OK).body(userProfile);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }

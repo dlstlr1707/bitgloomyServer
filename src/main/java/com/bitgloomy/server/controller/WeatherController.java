@@ -1,5 +1,7 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.domain.ConvertWeatherData;
+import com.bitgloomy.server.domain.Weather;
 import com.bitgloomy.server.dto.RequestWeatherDTO;
 import com.bitgloomy.server.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,8 @@ public class WeatherController {
     @PostMapping("/weather")
     public ResponseEntity<?> requestAPI(@RequestBody RequestWeatherDTO requestWeatherDTO){
         try {
-            weatherService.requestAPI(requestWeatherDTO);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            ConvertWeatherData convertWeatherData = weatherService.requestAPI(requestWeatherDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(convertWeatherData);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

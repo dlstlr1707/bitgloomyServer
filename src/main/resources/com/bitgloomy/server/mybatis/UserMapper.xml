@@ -22,8 +22,11 @@
         INSERT INTO user(id,password,name,phone_num,sms_reception,email,email_reception)
         VALUES(#{id},#{password},#{name},#{phoneNum},#{smsReception},#{email},#{emailReception});
     </insert>
-    <select id="findUserById">
+    <select id="findUserById" resultMap="userMap">
         SELECT * FROM user WHERE id=#{id};
+    </select>
+    <select id="findUserByUId" resultMap="userMap">
+        SELECT * FROM user WHERE uid=#{uid};
     </select>
     <update id="deleteUser">
         UPDATE user SET account_status = 'deleted'
