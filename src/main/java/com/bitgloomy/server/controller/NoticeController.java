@@ -1,12 +1,11 @@
 package com.bitgloomy.server.controller;
 
 import com.bitgloomy.server.domain.Notice;
-import com.bitgloomy.server.dto.RequestNoticeInfo;
+import com.bitgloomy.server.dto.RequestNoticeInfoDTO;
 import com.bitgloomy.server.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,11 +24,11 @@ public class NoticeController {
     }
 
     @PostMapping("/notice")
-    public ResponseEntity<?> findNoticeInfo(@RequestBody RequestNoticeInfo requestNoticeInfo){
-        System.out.println(requestNoticeInfo.getType());
-        int total = noticeService.countTotal(requestNoticeInfo.getType());
+    public ResponseEntity<?> findNoticeInfo(@RequestBody RequestNoticeInfoDTO requestNoticeInfoDTO){
+        System.out.println(requestNoticeInfoDTO.getType());
+        int total = noticeService.countTotal(requestNoticeInfoDTO.getType());
 
-        ArrayList<Notice> results = noticeService.findNotices(requestNoticeInfo);
+        ArrayList<Notice> results = noticeService.findNotices(requestNoticeInfoDTO);
 
         // total과 results를 Map에 담아서 반환
         Map<String, Object> response = new HashMap<>();

@@ -1,7 +1,7 @@
 package com.bitgloomy.server.service;
 
 import com.bitgloomy.server.domain.Notice;
-import com.bitgloomy.server.dto.RequestNoticeInfo;
+import com.bitgloomy.server.dto.RequestNoticeInfoDTO;
 import com.bitgloomy.server.mybatis.NoticeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ public class NoticeService {
         this.noticeMapper = noticeMapper;
     }
 
-    public ArrayList<Notice> findNotices(RequestNoticeInfo requestNoticeInfo){
-        String tableName = requestNoticeInfo.getType();
-        int limitNum = requestNoticeInfo.getDisplayPageAmount();
-        int offsetNum = (requestNoticeInfo.getPage()-1)*limitNum;
+    public ArrayList<Notice> findNotices(RequestNoticeInfoDTO requestNoticeInfoDTO){
+        String tableName = requestNoticeInfoDTO.getType();
+        int limitNum = requestNoticeInfoDTO.getDisplayPageAmount();
+        int offsetNum = (requestNoticeInfoDTO.getPage()-1)*limitNum;
 
         ArrayList<Notice> result = noticeMapper.findNotices(tableName,limitNum,offsetNum);
 

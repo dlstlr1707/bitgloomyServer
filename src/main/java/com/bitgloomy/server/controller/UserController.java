@@ -53,7 +53,7 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userUid",foundUser.getUid());
             session.setAttribute("auth",foundUser.getAuth());
-            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\"}", foundUser.getUid(), foundUser.getAuth());
+            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\",\"name\": \"%s\",\"email\": \"%s\",\"phoneNum\": \"%s\"}", foundUser.getUid(), foundUser.getAuth(),foundUser.getName(),foundUser.getEmail(),foundUser.getPhoneNum());
             return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         } catch (Exception e) {
             e.printStackTrace();

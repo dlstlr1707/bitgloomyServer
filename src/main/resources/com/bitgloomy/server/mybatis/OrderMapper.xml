@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bitgloomy.server.mybatis.OrderMapper">
+    <resultMap id="paymentMap" type="com.bitgloomy.server.domain.PaymentInfo">
+        <id column="merchant_uid" property="merchantUid"/>
+        <result column="pay_method" property="payMethod"/>
+        <result column="product_name" property="productName"/>
+        <result column="price" property="price"/>
+        <result column="buyer_email" property="buyerEmail"/>
+        <result column="buyer_name" property="buyerName"/>
+        <result column="buyer_tel" property="buyerTel"/>
+        <result column="buyer_addr" property="buyerAddr"/>
+        <result column="buyer_postcode" property="buyerPostcode"/>
+    </resultMap>
+    <insert id="savePayment">
+        INSERT INTO payment(merchant_uid,price)
+        VALUES(#{merchantUid},#{totalPrice});
+    </insert>
+    <select id="findPaymentById" resultMap="paymentMap">
+        SELECT *
+        FROM payment
+        WHERE merchant_uid = #{merchantUid};
+    </select>
+</mapper>

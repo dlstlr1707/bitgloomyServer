@@ -1,6 +1,6 @@
 package com.bitgloomy.server.dto;
 
-public class RequestNoticeInfo {
+public class RequestNoticeInfoDTO {
     private int page;
     private int displayPageAmount;
     private String type;
