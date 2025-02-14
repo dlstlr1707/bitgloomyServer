@@ -1,5 +1,6 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.domain.Address;
 import com.bitgloomy.server.domain.User;
 import com.bitgloomy.server.domain.UserProfile;
 import com.bitgloomy.server.dto.RequestJoinDTO;
@@ -31,11 +32,12 @@ public class UserController {
         user.setEmailReception(requestJoinDTO.getEmailReception());
         try {
             userService.signup(user);
-            User foundUser = userService.login(user);
+            userService.saveAddress(requestJoinDTO);
+            UserProfile foundUser = userService.login(user);
             HttpSession session = request.getSession();
             session.setAttribute("userUid",foundUser.getUid());
             session.setAttribute("auth",foundUser.getAuth());
-            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\"}", foundUser.getUid(), foundUser.getAuth());
+            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\",\"name\": \"%s\",\"email\": \"%s\",\"phoneNum\": \"%s\",\"address1\": \"%s\",\"postcode1\": \"%s\"}", foundUser.getUid(), foundUser.getAuth(),foundUser.getName(),foundUser.getEmail(),foundUser.getPhoneNum(),foundUser.getAddress().getAddress1(),foundUser.getAddress().getPostcode1());
             return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -49,11 +51,11 @@ public class UserController {
         user.setId(requestLoginDTO.getId());
         user.setPassword(requestLoginDTO.getPassword());
         try {
-            User foundUser = userService.login(user);
+            UserProfile foundUser = userService.login(user);
             HttpSession session = request.getSession();
             session.setAttribute("userUid",foundUser.getUid());
             session.setAttribute("auth",foundUser.getAuth());
-            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\",\"name\": \"%s\",\"email\": \"%s\",\"phoneNum\": \"%s\"}", foundUser.getUid(), foundUser.getAuth(),foundUser.getName(),foundUser.getEmail(),foundUser.getPhoneNum());
+            String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\",\"name\": \"%s\",\"email\": \"%s\",\"phoneNum\": \"%s\",\"address1\": \"%s\",\"postcode1\": \"%s\"}", foundUser.getUid(), foundUser.getAuth(),foundUser.getName(),foundUser.getEmail(),foundUser.getPhoneNum(),foundUser.getAddress().getAddress1(),foundUser.getAddress().getPostcode1());
             return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,13 +92,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PostMapping("/profile/{uid}")
-    public ResponseEntity<?> findUserProfile(@PathVariable(value = "uid")int uid,HttpServletRequest request){
+    public ResponseEntity<?> findUserProfile(@PathVariable(value = "uid")String uid,HttpServletRequest request){
         HttpSession session = request.getSession();
         if(session==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try {
-            UserProfile userProfile = userService.findUserProfile(uid);
+            UserProfile userProfile = userService.findUserProfile(Integer.parseInt(uid));
             return ResponseEntity.status(HttpStatus.OK).body(userProfile);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

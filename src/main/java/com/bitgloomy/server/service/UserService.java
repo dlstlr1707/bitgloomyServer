@@ -1,7 +1,9 @@
 package com.bitgloomy.server.service;
 
+import com.bitgloomy.server.domain.Address;
 import com.bitgloomy.server.domain.User;
 import com.bitgloomy.server.domain.UserProfile;
+import com.bitgloomy.server.dto.RequestJoinDTO;
 import com.bitgloomy.server.mybatis.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,12 @@ public class UserService {
         }
         userMapper.saveUser(user);
     }
-    public User login(User user) throws Exception {
+    public UserProfile login(User user) throws Exception {
         User foundUser = userMapper.findUserById(user.getId());
-        if((foundUser != null)&&(user.getPassword().equals(foundUser.getPassword()))){
-            return foundUser;
+        UserProfile foundUserProfile = userMapper.findUserProfile(foundUser.getUid());
+
+        if((foundUserProfile != null)&&(user.getPassword().equals(foundUser.getPassword()))){
+            return foundUserProfile;
         }else{
             throw new Exception();
         }
@@ -38,22 +42,21 @@ public class UserService {
         userMapper.deleteUser(uid);
     }
     public UserProfile findUserProfile (int uid) throws Exception {
-        User findUserInfo = userMapper.findUserByUId(uid);
+        System.out.println(uid);
+        UserProfile findUserProfile = userMapper.findUserProfile(uid);
 
-        if(findUserInfo == null){
+        if(findUserProfile == null){
             throw new Exception();
         }
 
-        UserProfile findUserProfile = new UserProfile();
-        findUserProfile.setId(findUserInfo.getId());
-        findUserProfile.setUid(findUserInfo.getUid());
-        findUserProfile.setName(findUserInfo.getName());
-        findUserProfile.setPhoneNum(findUserInfo.getPhoneNum());
-        findUserProfile.setSmsReception(findUserInfo.getSmsReception());
-        findUserProfile.setEmail(findUserInfo.getEmail());
-        findUserProfile.setEmailReception(findUserInfo.getEmailReception());
-        findUserProfile.setPoint(findUserInfo.getPoint());
-
         return findUserProfile;
+    }
+    public void saveAddress(RequestJoinDTO requestJoinDTO){
+        User foundUser = userMapper.findUserById(requestJoinDTO.getId());
+        Address address = new Address();
+        address.setUserUid(foundUser.getUid());
+        address.setAddress1(requestJoinDTO.getAddress());
+        address.setPostcode1(requestJoinDTO.getPostcode());
+        userMapper.saveAddress(address);
     }
 }

@@ -1,7 +1,10 @@
 package com.bitgloomy.server.service;
 
 
+import com.bitgloomy.server.domain.Order;
 import com.bitgloomy.server.domain.PaymentInfo;
+import com.bitgloomy.server.dto.RequestSaveOrderDTO;
+import com.bitgloomy.server.dto.RequestSavePaymentDTO;
 import com.bitgloomy.server.dto.RequestValidateDTO;
 import com.bitgloomy.server.dto.RequestPreparationDTO;
 import com.bitgloomy.server.mybatis.OrderMapper;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 
 @Service
@@ -66,11 +70,50 @@ public class OrderService {
             CancelData cancelData = cancelPayment(iamportResponse);
             api.cancelPaymentByImpUid(cancelData);
         }
-        System.out.println("리턴전 까지 완료");
         return iamportResponse.getResponse();
     }
     public CancelData cancelPayment(IamportResponse<Payment> response) {
         return new CancelData(response.getResponse().getImpUid(), true);
     }
+    public void modifyPayment(RequestSavePaymentDTO requestSavePaymentDTO) throws Exception {
+        PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setMerchantUid(requestSavePaymentDTO.getMerchant_uid());
+        paymentInfo.setPayMethod(requestSavePaymentDTO.getPay_method());
+        paymentInfo.setProductName(requestSavePaymentDTO.getName());
+        paymentInfo.setPrice(requestSavePaymentDTO.getAmount());
+        paymentInfo.setBuyerEmail(requestSavePaymentDTO.getBuyer_email());
+        paymentInfo.setBuyerName(requestSavePaymentDTO.getBuyer_name());
+        paymentInfo.setBuyerTel(requestSavePaymentDTO.getBuyer_tel());
+        paymentInfo.setBuyerAddr(requestSavePaymentDTO.getBuyer_addr());
+        paymentInfo.setBuyerPostcode(requestSavePaymentDTO.getBuyer_postcode());
+        boolean result = orderMapper.modifyPayment(paymentInfo);
+        if(result == false){
+            throw new Exception();
+        }
+    }
+    public void saveOrderData(ArrayList<RequestSaveOrderDTO> requestSaveOrderDTO) throws Exception {
+        Order order = new Order();
+        for(int i=0; i<requestSaveOrderDTO.size();i++) {
+            order.setUserUid(Integer.parseInt(requestSaveOrderDTO.get(i).getUserUid()));
+            order.setProductUid(requestSaveOrderDTO.get(i).getProductUid());
+            order.setProductName(requestSaveOrderDTO.get(i).getProductName());
+            order.setMerchantUid(requestSaveOrderDTO.get(i).getMerchantUid());
+            order.setAmount(requestSaveOrderDTO.get(i).getAmount());
+            order.setPrice(requestSaveOrderDTO.get(i).getPrice());
+            order.setSize(requestSaveOrderDTO.get(i).getSize());
 
+            System.out.println(order.getUserUid());
+            System.out.println(order.getProductUid());
+            System.out.println(order.getProductName());
+            System.out.println(order.getMerchantUid());
+            System.out.println(order.getAmount());
+            System.out.println(order.getPrice());
+            System.out.println(order.getSize());
+
+            boolean result = orderMapper.saveOrder(order);
+            if(result == false){
+                throw new Exception();
+            }
+        }
+    }
 }

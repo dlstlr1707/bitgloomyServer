@@ -2,16 +2,22 @@ package com.bitgloomy.server.controller;
 
 import com.bitgloomy.server.domain.Order;
 import com.bitgloomy.server.domain.PaymentInfo;
+import com.bitgloomy.server.dto.RequestSaveOrderDTO;
+import com.bitgloomy.server.dto.RequestSavePaymentDTO;
 import com.bitgloomy.server.dto.RequestValidateDTO;
 import com.bitgloomy.server.dto.RequestPreparationDTO;
 import com.bitgloomy.server.service.OrderService;
 import com.siot.IamportRestClient.response.Payment;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 
 @RestController
@@ -45,21 +51,22 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    @PostMapping("/save/payment")
-    public ResponseEntity<?> savePayment(@RequestBody PaymentInfo payment){
+    @PatchMapping("/payment")
+    public ResponseEntity<?> modifyPayment(@RequestBody RequestSavePaymentDTO requestSavePaymentDTO){
         try {
-
+            orderService.modifyPayment(requestSavePaymentDTO);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
     @PostMapping("/save/order")
-    public ResponseEntity<?> saveOrder(@RequestBody Order order){
+    public ResponseEntity<?> saveOrder(@RequestBody ArrayList<RequestSaveOrderDTO> requestSaveOrderDTO){
         try {
-
+            orderService.saveOrderData(requestSaveOrderDTO);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }

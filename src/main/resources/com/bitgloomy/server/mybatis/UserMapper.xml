@@ -18,15 +18,47 @@
         <result column="division" property="division"/>
         <result column="point" property="point"/>
     </resultMap>
+    <resultMap id="profileMap" type="com.bitgloomy.server.domain.UserProfile">
+        <id column="uid" property="uid"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="phone_num" property="phoneNum"/>
+        <result column="sms_reception" property="smsReception"/>
+        <result column="email" property="email"/>
+        <result column="email_reception" property="emailReception"/>
+        <result column="auth" property="auth"/>
+        <result column="point" property="point"/>
+        <association property="address" javaType="com.bitgloomy.server.domain.Address">
+            <id column="uid" property="uid"/>
+            <result column="user_uid" property="userUid"/>
+            <result column="address_1" property="address1"/>
+            <result column="address_2" property="address2"/>
+            <result column="address_3" property="address3"/>
+            <result column="address_4" property="address4"/>
+            <result column="address_5" property="address5"/>
+            <result column="postcode_1" property="postcode1"/>
+            <result column="postcode_2" property="postcode2"/>
+            <result column="postcode_3" property="postcode3"/>
+            <result column="postcode_4" property="postcode4"/>
+            <result column="postcode_5" property="postcode5"/>
+        </association>
+    </resultMap>
     <insert id="saveUser">
         INSERT INTO user(id,password,name,phone_num,sms_reception,email,email_reception)
         VALUES(#{id},#{password},#{name},#{phoneNum},#{smsReception},#{email},#{emailReception});
     </insert>
+    <insert id="saveAddress">
+        INSERT INTO user_address(user_uid,address_1,address_2,address_3,address_4,address_5,postcode_1,postcode_2,postcode_3,postcode_4,postcode_5)
+        VALUES(#{userUid},#{address1},#{address2},#{address3},#{address4},#{address5},#{postcode1},#{postcode2},#{postcode3},#{postcode4},#{postcode5});
+    </insert>
     <select id="findUserById" resultMap="userMap">
-        SELECT * FROM user WHERE id=#{id};
+        SELECT * FROM user WHERE id=#{id} AND account_status='active';
     </select>
-    <select id="findUserByUId" resultMap="userMap">
-        SELECT * FROM user WHERE uid=#{uid};
+    <select id="findUserProfile" resultMap="profileMap">
+        SELECT user.*, user_address.address_1, user_address.address_2, user_address.address_3, user_address.address_4, user_address.address_5, user_address.postcode_1, user_address.postcode_2, user_address.postcode_3, user_address.postcode_4, user_address.postcode_5
+        FROM user
+        JOIN user_address ON user.uid = user_address.user_uid
+        WHERE user.uid=#{uid};
     </select>
     <update id="deleteUser">
         UPDATE user SET account_status = 'deleted'

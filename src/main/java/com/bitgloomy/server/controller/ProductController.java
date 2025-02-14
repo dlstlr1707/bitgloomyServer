@@ -4,6 +4,7 @@ import com.bitgloomy.server.domain.Cart;
 import com.bitgloomy.server.domain.Product;
 import com.bitgloomy.server.domain.ProductImg;
 import com.bitgloomy.server.dto.RequestAddCartDTO;
+import com.bitgloomy.server.dto.RequestDeleteSelectedCartDTO;
 import com.bitgloomy.server.dto.RequestModifyCartDTO;
 import com.bitgloomy.server.dto.RequestUploadProductDTO;
 import com.bitgloomy.server.service.ProductService;
@@ -149,6 +150,21 @@ public class ProductController {
         }
         try {
             productService.deleteCart(uid);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PostMapping("/delete/carts")
+    public ResponseEntity<?> deleteCarts(@RequestBody ArrayList<RequestDeleteSelectedCartDTO> requestDeleteSelectedCartDTO, HttpServletRequest request){
+        System.out.println(requestDeleteSelectedCartDTO.get(0).getUid());
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            productService.deleteCarts(requestDeleteSelectedCartDTO);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             e.printStackTrace();

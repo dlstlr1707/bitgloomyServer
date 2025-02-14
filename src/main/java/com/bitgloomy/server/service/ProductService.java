@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.bitgloomy.server.domain.Cart;
 import com.bitgloomy.server.domain.Product;
 import com.bitgloomy.server.dto.RequestAddCartDTO;
+import com.bitgloomy.server.dto.RequestDeleteSelectedCartDTO;
 import com.bitgloomy.server.dto.RequestModifyCartDTO;
 import com.bitgloomy.server.mybatis.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,11 @@ public class ProductService {
     }
     public void deleteCart(int uid){
         productMapper.deleteCart(uid);
+    }
+    public void deleteCarts(ArrayList<RequestDeleteSelectedCartDTO> requestDeleteSelectedCartDTO){
+        for(int i=0; i<requestDeleteSelectedCartDTO.size();i++) {
+           productMapper.deleteCart(requestDeleteSelectedCartDTO.get(i).getUid());
+        }
     }
     public void deleteAllCart(int userUid){ productMapper.deleteAllCart(userUid); }
 }

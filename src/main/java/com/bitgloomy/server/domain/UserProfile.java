@@ -1,7 +1,5 @@
 package com.bitgloomy.server.domain;
 
-import java.time.LocalDateTime;
-
 public class UserProfile {
     private int uid;
     private String id;
@@ -10,7 +8,9 @@ public class UserProfile {
     private String smsReception;
     private String email;
     private String emailReception;
+    private String auth;
     private int point;
+    private Address address;
 
     public int getUid() {
         return uid;
@@ -68,11 +68,27 @@ public class UserProfile {
         this.emailReception = emailReception;
     }
 
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
+
     public int getPoint() {
         return point;
     }
 
     public void setPoint(int point) {
         this.point = point;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
