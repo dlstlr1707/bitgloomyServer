@@ -1,5 +1,6 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.dto.RequestModifyPWDTO;
 import com.bitgloomy.server.service.MailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,8 @@ public class MailController {
 
     // 인증 이메일 전송
     @GetMapping("/mailSend/{email}")
-    public HashMap<String, Object> mailSend(@PathVariable String email) {
+    public HashMap<String, Object> mailSend(@PathVariable(value = "email") String email) {
         HashMap<String, Object> map = new HashMap<>();
-
         try {
             number = mailService.sendMail(email);
             String num = String.valueOf(number);
@@ -38,7 +38,7 @@ public class MailController {
 
     // 인증번호 일치여부 확인
     @GetMapping("/mailCheck/{code}")
-    public ResponseEntity<?> mailCheck(@PathVariable String code) {
+    public ResponseEntity<?> mailCheck(@PathVariable(value = "code") String code) {
 
         boolean isMatch = code.equals(String.valueOf(number));
         System.out.println(number);
@@ -49,4 +49,5 @@ public class MailController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
 }

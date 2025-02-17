@@ -3,7 +3,9 @@ package com.bitgloomy.server.service;
 import com.bitgloomy.server.domain.Address;
 import com.bitgloomy.server.domain.User;
 import com.bitgloomy.server.domain.UserProfile;
+import com.bitgloomy.server.dto.RequestFindIdDTO;
 import com.bitgloomy.server.dto.RequestJoinDTO;
+import com.bitgloomy.server.dto.RequestModifyPWDTO;
 import com.bitgloomy.server.mybatis.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,11 +54,26 @@ public class UserService {
         return findUserProfile;
     }
     public void saveAddress(RequestJoinDTO requestJoinDTO){
+        System.out.println("주소저장 실행됨");
         User foundUser = userMapper.findUserById(requestJoinDTO.getId());
         Address address = new Address();
         address.setUserUid(foundUser.getUid());
         address.setAddress1(requestJoinDTO.getAddress());
         address.setPostcode1(requestJoinDTO.getPostcode());
         userMapper.saveAddress(address);
+    }
+    public String findID(RequestFindIdDTO requestFindIdDTO) throws Exception {
+        String findID = userMapper.findID(requestFindIdDTO.getName(), requestFindIdDTO.getEmail());
+        if(findID == null || findID.equals("")){
+            throw new Exception();
+        }
+        return findID;
+    }
+    public void modifyPW(RequestModifyPWDTO requestModifyPWDTO) throws Exception {
+        User foundUser = userMapper.findUserById(requestModifyPWDTO.getId());
+        if(foundUser == null){
+            throw new Exception();
+        }
+        userMapper.modifyPW(requestModifyPWDTO.getChangePW(),foundUser.getUid());
     }
 }

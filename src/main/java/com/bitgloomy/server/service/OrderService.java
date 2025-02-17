@@ -1,6 +1,7 @@
 package com.bitgloomy.server.service;
 
 
+import com.bitgloomy.server.domain.DisplayOrder;
 import com.bitgloomy.server.domain.Order;
 import com.bitgloomy.server.domain.PaymentInfo;
 import com.bitgloomy.server.dto.RequestSaveOrderDTO;
@@ -116,4 +117,12 @@ public class OrderService {
             }
         }
     }
+    public ArrayList<DisplayOrder> displayOrders(int uid) throws Exception {
+        ArrayList<DisplayOrder> results = orderMapper.displayOrder(uid);
+        if(results == null){
+            throw new Exception();
+        }
+        return results;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.domain.DisplayOrder;
 import com.bitgloomy.server.domain.Order;
 import com.bitgloomy.server.domain.PaymentInfo;
 import com.bitgloomy.server.dto.RequestSaveOrderDTO;
@@ -12,10 +13,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -65,6 +63,16 @@ public class OrderController {
         try {
             orderService.saveOrderData(requestSaveOrderDTO);
             return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @GetMapping("/orders/{uid}")
+    public ResponseEntity<?> displayOrder(@PathVariable(value = "uid")String uid){
+        try {
+            ArrayList<DisplayOrder> results = orderService.displayOrders(Integer.parseInt(uid));
+            return ResponseEntity.status(HttpStatus.OK).body(results);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

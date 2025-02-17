@@ -25,6 +25,34 @@
         <result column="size" property="size"/>
         <result column="order_date" property="orderDate"/>
     </resultMap>
+    <resultMap id="displayOrderMap" type="com.bitgloomy.server.domain.DisplayOrder">
+        <id column="uid" property="uid"/>
+        <result column="user_uid" property="userUid"/>
+        <result column="product_uid" property="productUid"/>
+        <result column="product_name" property="productName"/>
+        <result column="merchant_uid" property="merchantUid"/>
+        <result column="amount" property="amount"/>
+        <result column="price" property="price"/>
+        <result column="size" property="size"/>
+        <result column="order_date" property="orderDate"/>
+        <association property="productImg" javaType="com.bitgloomy.server.domain.ProductImg">
+            <id column="uid" property="uid"></id>
+            <result column="product_id" property="productUid"></result>
+            <result column="similar_product_name" property="similarProductName"></result>
+            <result column="similar_img_url" property="similarImgUrl"></result>
+            <result column="img_url" property="imgURL"></result>
+            <result column="sub_img_url_1" property="subImgUrl1"></result>
+            <result column="sub_img_url_2" property="subImgUrl2"></result>
+            <result column="sub_img_url_3" property="subImgUrl3"></result>
+            <result column="sub_img_url_4" property="subImgUrl4"></result>
+            <result column="sub_img_url_5" property="subImgUrl5"></result>
+            <result column="sub_img_url_6" property="subImgUrl6"></result>
+            <result column="sub_img_url_7" property="subImgUrl7"></result>
+            <result column="sub_img_url_8" property="subImgUrl8"></result>
+            <result column="sub_img_url_9" property="subImgUrl9"></result>
+            <result column="sub_img_url_10" property="subImgUrl10"></result>
+        </association>
+    </resultMap>
     <insert id="savePayment">
         INSERT INTO payment(merchant_uid,price)
         VALUES(#{merchantUid},#{totalPrice});
@@ -42,4 +70,10 @@
         UPDATE payment SET pay_method = #{payMethod}, product_name = #{productName}, buyer_email = #{buyerEmail}, buyer_name = #{buyerName}, buyer_tel = #{buyerTel}, buyer_addr = #{buyerAddr}, buyer_postcode = #{buyerPostcode}
         WHERE merchant_uid = #{merchantUid};
     </update>
+    <select id="displayOrder" resultMap="displayOrderMap">
+        SELECT `order`.*,product_img.img_url
+        FROM `order`
+        JOIN product_img ON `order`.product_uid = product_img.product_uid
+        WHERE user_uid=#{uid};
+    </select>
 </mapper>

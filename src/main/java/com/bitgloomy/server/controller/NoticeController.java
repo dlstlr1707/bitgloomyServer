@@ -28,7 +28,12 @@ public class NoticeController {
         System.out.println(requestNoticeInfoDTO.getType());
         int total = noticeService.countTotal(requestNoticeInfoDTO.getType());
 
-        ArrayList<Notice> results = noticeService.findNotices(requestNoticeInfoDTO);
+        ArrayList<Notice> results = null;
+        try {
+            results = noticeService.findNotices(requestNoticeInfoDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // total과 results를 Map에 담아서 반환
         Map<String, Object> response = new HashMap<>();

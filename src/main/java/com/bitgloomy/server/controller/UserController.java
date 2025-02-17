@@ -1,10 +1,11 @@
 package com.bitgloomy.server.controller;
 
-import com.bitgloomy.server.domain.Address;
 import com.bitgloomy.server.domain.User;
 import com.bitgloomy.server.domain.UserProfile;
+import com.bitgloomy.server.dto.RequestFindIdDTO;
 import com.bitgloomy.server.dto.RequestJoinDTO;
 import com.bitgloomy.server.dto.RequestLoginDTO;
+import com.bitgloomy.server.dto.RequestModifyPWDTO;
 import com.bitgloomy.server.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -55,6 +56,9 @@ public class UserController {
             HttpSession session = request.getSession();
             session.setAttribute("userUid",foundUser.getUid());
             session.setAttribute("auth",foundUser.getAuth());
+
+            System.out.println("auth is : "+session.getAttribute("auth"));
+
             String jsonResponse = String.format("{\"userUid\": \"%s\", \"auth\": \"%s\",\"name\": \"%s\",\"email\": \"%s\",\"phoneNum\": \"%s\",\"address1\": \"%s\",\"postcode1\": \"%s\"}", foundUser.getUid(), foundUser.getAuth(),foundUser.getName(),foundUser.getEmail(),foundUser.getPhoneNum(),foundUser.getAddress().getAddress1(),foundUser.getAddress().getPostcode1());
             return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
         } catch (Exception e) {
@@ -104,5 +108,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
+    @PostMapping("/findID")
+    public ResponseEntity<?> findID(@RequestBody RequestFindIdDTO requestFindIdDTO){
+        try {
+            String findID = userService.findID(requestFindIdDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(findID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PatchMapping("/modifyPW")
+    public ResponseEntity<?> modifyID(@RequestBody RequestModifyPWDTO requestModifyPWDTODTO){
+        try {
+            userService.modifyPW(requestModifyPWDTODTO);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

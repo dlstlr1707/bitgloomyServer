@@ -30,13 +30,8 @@ public class ProductController {
     }
     @Transactional
     @PostMapping("/product")
-    public ResponseEntity<?> uploadProduct(@RequestPart(value = "mainImg") MultipartFile file, @RequestPart(value = "subImg") List<MultipartFile> files, @RequestPart(value = "productInfo") RequestUploadProductDTO requestUploadProductDTO, HttpServletRequest request){
+    public ResponseEntity<?> uploadProduct(@RequestPart(value = "mainImg") MultipartFile file, @RequestPart(value = "subImg") List<MultipartFile> files, @RequestPart(value = "productInfo") RequestUploadProductDTO requestUploadProductDTO){
         // 추후 권한 확인하는 코드 추가 예정
-        HttpSession session = request.getSession(false);
-        if(session==null || session.getAttribute("auth")!="role_admin"){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
         String mainImgURL;
         List<String> subImgURL = new ArrayList<>();
         try {

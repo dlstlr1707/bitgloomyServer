@@ -12,7 +12,15 @@
     </resultMap>
     <select id="findNotices" resultMap="noticeMap">
         SELECT *
-        FROM ${tableName}
+        FROM
+        <choose>
+            <when test="tableName != null">
+                ${tableName}
+            </when>
+            <otherwise>
+                notice
+            </otherwise>
+        </choose>
         LIMIT #{limitNum} OFFSET #{offsetNum};
     </select>
 

@@ -2,12 +2,13 @@ package com.bitgloomy.server.mybatis;
 
 import com.bitgloomy.server.domain.Notice;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 
 @Mapper
 public interface NoticeMapper {
-    ArrayList<Notice> findNotices(String tableName,int limitNum,int offsetNum);
+    ArrayList<Notice> findNotices(@Param("tableName") String tableName, @Param("limitNum") int limitNum, @Param("offsetNum") int offsetNum);
     // notice CUD
     void saveNotice(Notice notice);
     void modifyNotice(Notice notice);

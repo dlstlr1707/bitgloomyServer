@@ -54,6 +54,14 @@
     <select id="findUserById" resultMap="userMap">
         SELECT * FROM user WHERE id=#{id} AND account_status='active';
     </select>
+    <select id="findID">
+        SELECT id FROM user
+        WHERE name=#{name} AND email=#{email};
+    </select>
+    <update id="modifyPW">
+        UPDATE user SET password = #{changePW}
+        WHERE uid = #{uid};
+    </update>
     <select id="findUserProfile" resultMap="profileMap">
         SELECT user.*, user_address.address_1, user_address.address_2, user_address.address_3, user_address.address_4, user_address.address_5, user_address.postcode_1, user_address.postcode_2, user_address.postcode_3, user_address.postcode_4, user_address.postcode_5
         FROM user
