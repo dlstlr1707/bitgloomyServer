@@ -13,6 +13,7 @@ public interface ProductMapper {
     Product findProductByPname(String pname);
     Product findProductUidByPname(String pname);
     ArrayList<Product> findAllProducts();
+    ArrayList<Product> searchProducts(String text);
     void addCart(Cart cart);
     ArrayList<Cart> findAllCarts(int uid);
     void modifyCart(Cart cart);

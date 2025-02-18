@@ -84,6 +84,12 @@
         JOIN product_img ON product.uid = product_img.product_uid
         WHERE deleteyn='n';
     </select>
+    <select id="searchProducts" resultMap="productMap">
+        SELECT product.*,product_img.img_url
+        FROM product
+        JOIN product_img ON product.uid = product_img.product_uid
+        WHERE deleteyn='n' AND product.pname LIKE CONCAT('%', #{text}, '%');
+    </select>
     <insert id="addCart" >
         INSERT INTO cart(user_uid,product_uid,product_name,amount,price,size)
         VALUES(#{userUid},#{productUid},#{productName},#{amount},#{price},#{size});

@@ -21,12 +21,37 @@
                 notice
             </otherwise>
         </choose>
+        WHERE deleteyn = 'n'
         LIMIT #{limitNum} OFFSET #{offsetNum};
     </select>
-
+    <select id="findNotice" resultMap="noticeMap">
+        SELECT *
+        FROM
+        <choose>
+            <when test="tableName != null">
+                ${tableName}
+            </when>
+            <otherwise>
+                notice
+            </otherwise>
+        </choose>
+        WHERE deleteyn = 'n' AND uid = #{uid};
+    </select>
     <select id="countTotal">
         SELECT COUNT(*) AS total
         FROM ${tableName}
         WHERE deleteyn = 'n';
     </select>
+    <insert id="saveNotice">
+        INSERT INTO ${tableName}(title,content)
+        VALUES(#{notice.title},#{notice.content});
+    </insert>
+    <update id="modifyNotice">
+        UPDATE ${tableName} SET title = #{notice.title} , content = #{notice.content}
+        WHERE uid = #{notice.uid};
+    </update>
+    <update id="deleteNotice">
+        UPDATE ${tableName} SET deleteyn = 'y'
+        WHERE uid = #{uid};
+    </update>
 </mapper>

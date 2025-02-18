@@ -180,4 +180,14 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @GetMapping("/search/{text}")
+    public ResponseEntity<?> searchProducts(@PathVariable(value = "text")String text){
+        try{
+            ArrayList<Product> productsList = productService.searchProducts(text);
+            return ResponseEntity.status(HttpStatus.OK).body(productsList);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

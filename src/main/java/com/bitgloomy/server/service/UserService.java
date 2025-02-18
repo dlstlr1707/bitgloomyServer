@@ -10,6 +10,8 @@ import com.bitgloomy.server.mybatis.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class UserService {
     private UserMapper userMapper;
@@ -34,11 +36,15 @@ public class UserService {
             throw new Exception();
         }
     }
-    public void checkUserId(String id) throws Exception{
+    public String checkUserId(String id){
         User foundUser = userMapper.findUserById(id);
+        String result;
         if(foundUser != null){
-            throw new Exception();
+            result = "해당 ID가 이미 존재합니다.";
+        }else{
+            result = "해당 ID는 사용 가능합니다.";
         }
+        return result;
     }
     public void deleteUser(int uid) {
         userMapper.deleteUser(uid);
@@ -61,6 +67,16 @@ public class UserService {
         address.setAddress1(requestJoinDTO.getAddress());
         address.setPostcode1(requestJoinDTO.getPostcode());
         userMapper.saveAddress(address);
+    }
+    public Address findAllAddress(int uid) throws Exception {
+        Address results = userMapper.findAllAddress(uid);
+        if(results == null){
+            throw new Exception();
+        }
+        return results;
+    }
+    public void modifyAddress(Address address){
+        userMapper.modifyAddress(address);
     }
     public String findID(RequestFindIdDTO requestFindIdDTO) throws Exception {
         String findID = userMapper.findID(requestFindIdDTO.getName(), requestFindIdDTO.getEmail());

@@ -94,6 +94,14 @@ public class ProductService {
         }
         return resultArr;
     }
+    public ArrayList<Product> searchProducts(String text) throws Exception {
+        ArrayList<Product> resultArr = productMapper.searchProducts(text);
+        System.out.println(text);
+        if(resultArr.isEmpty()){
+            throw new Exception();
+        }
+        return resultArr;
+    }
     public void addCart(RequestAddCartDTO requestAddCartDTO)throws Exception{
         // 이미 카트에 해당상품 있으면 에러
         Cart cart = new Cart();

@@ -1,14 +1,16 @@
 package com.bitgloomy.server.controller;
 
 import com.bitgloomy.server.domain.Notice;
+import com.bitgloomy.server.dto.RequestModifyNoticeDTO;
 import com.bitgloomy.server.dto.RequestNoticeInfoDTO;
+import com.bitgloomy.server.dto.RequestUploadNoticeDTO;
 import com.bitgloomy.server.service.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +25,7 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    @PostMapping("/notice")
+    @PostMapping("/notices")
     public ResponseEntity<?> findNoticeInfo(@RequestBody RequestNoticeInfoDTO requestNoticeInfoDTO){
         System.out.println(requestNoticeInfoDTO.getType());
         int total = noticeService.countTotal(requestNoticeInfoDTO.getType());
@@ -42,5 +44,30 @@ public class NoticeController {
 
         // total josn에 추가해서 반환 해줘야함
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PostMapping("/notice")
+    public ResponseEntity<?> uploadNotice(@RequestBody RequestUploadNoticeDTO requestUploadNoticeDTO){
+        noticeService.uploadNotice(requestUploadNoticeDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @PatchMapping("/notice")
+    public ResponseEntity<?> modifyNotice(@RequestBody RequestModifyNoticeDTO requestModifyNoticeDTO){
+        noticeService.modifyNotice(requestModifyNoticeDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @DeleteMapping("/notice/{tableName}/{uid}")
+    public ResponseEntity<?> deleteNotice(@PathVariable(value = "tableName")String tableName,@PathVariable(value = "uid")int uid){
+        noticeService.deleteNotice(tableName,uid);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @GetMapping("/notice/{tableName}/{uid}")
+    public ResponseEntity<?> findNotice(@PathVariable(value = "tableName")String tableName,@PathVariable(value = "uid")int uid){
+        try {
+            Notice foundNotice = noticeService.findNotice(tableName,uid);
+            return ResponseEntity.status(HttpStatus.OK).body(foundNotice);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

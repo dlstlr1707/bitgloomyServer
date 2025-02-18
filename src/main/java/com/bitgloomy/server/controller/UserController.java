@@ -1,5 +1,6 @@
 package com.bitgloomy.server.controller;
 
+import com.bitgloomy.server.domain.Address;
 import com.bitgloomy.server.domain.User;
 import com.bitgloomy.server.domain.UserProfile;
 import com.bitgloomy.server.dto.RequestFindIdDTO;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 public class UserController {
@@ -68,13 +71,8 @@ public class UserController {
     }
     @GetMapping("/checkID/{id}")
     public ResponseEntity<?> checkUserId(@PathVariable(value = "id")String id){
-        try {
-            userService.checkUserId(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        String result = userService.checkUserId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
@@ -127,5 +125,20 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+    @GetMapping("/address/{uid}")
+    public ResponseEntity<?> findAllAddress(@PathVariable(value = "uid")String uid){
+        try {
+            Address results = userService.findAllAddress(Integer.parseInt(uid));
+            return ResponseEntity.status(HttpStatus.OK).body(results);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PatchMapping("/address")
+    public ResponseEntity<?> modifyAddress (@RequestBody Address address){
+        userService.modifyAddress(address);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
