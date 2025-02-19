@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -36,17 +37,19 @@ public class ProductService {
         }
     }
     public String save(MultipartFile file) throws IOException {
+        // 이미지 이름 바꾸는 코드 추가해야함
         try {
             validateExist(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String fileName = file.getOriginalFilename();
+        String fname = file.getOriginalFilename();
+        String sname = System.currentTimeMillis() + fname.substring(fname.lastIndexOf("."));
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
-        amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-        return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + fileName;
+        amazonS3Client.putObject(bucket, sname, file.getInputStream(), metadata);
+        return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/" + sname;
     }
 
     public void saveProduct(Product product) throws Exception {
@@ -56,6 +59,22 @@ public class ProductService {
         }
         productMapper.saveProduct(product);
     }
+    public void modifyProduct(Product product,String modifyPname) throws Exception {
+        Product foundProduct = productMapper.findProductByPname(product.getPname());
+        if(foundProduct == null){
+            throw new Exception();
+        }
+        product.setPname(modifyPname);
+        product.setUid(foundProduct.getUid());
+        productMapper.modifyProduct(product);
+    }
+    public void deleteProduct(String pname) throws Exception {
+        Product foundProduct = productMapper.findProductByPname(pname);
+        if(foundProduct == null){
+            throw new Exception();
+        }
+        productMapper.deleteProduct(foundProduct.getUid());
+    }
     public void saveProductImg(Product product) throws Exception {
         Product foundProduct = productMapper.findProductUidByPname(product.getPname());
         if(foundProduct == null){
@@ -63,8 +82,26 @@ public class ProductService {
         }
         product.getProductImg().setUid(foundProduct.getUid());
         // 관련상품의 이미지 가져와서 product에 셋팅하는 코드 있어야함
-        product.getProductImg().setSimilarImgUrl(findSimilarProductImgURL(product.getProductImg().getSimilarProductName()));
+        if(product.getProductImg().getSimilarProductName().equals("")){
+            product.getProductImg().setSimilarImgUrl("");
+        }else{
+            product.getProductImg().setSimilarImgUrl(findSimilarProductImgURL(product.getProductImg().getSimilarProductName()));
+        }
         productMapper.saveProductImg(product);
+    }
+    public void modifyProductImg(Product product) throws Exception {
+        Product foundProduct = productMapper.findProductUidByPname(product.getPname());
+        if(foundProduct == null){
+            throw new Exception();
+        }
+        product.getProductImg().setUid(foundProduct.getUid());
+        // 관련상품의 이미지 가져와서 product에 셋팅하는 코드 있어야함
+        if(product.getProductImg().getSimilarProductName().equals("")){
+            product.getProductImg().setSimilarImgUrl("");
+        }else{
+            product.getProductImg().setSimilarImgUrl(findSimilarProductImgURL(product.getProductImg().getSimilarProductName()));
+        }
+        productMapper.modifyProductImg(product);
     }
     public String findSimilarProductImgURL(String similarProductName)throws Exception{
         // 구분자(,)로 구성된 String 분할해서 String으로 url가져와서 구분자(,)로 다시 리팩후 응답

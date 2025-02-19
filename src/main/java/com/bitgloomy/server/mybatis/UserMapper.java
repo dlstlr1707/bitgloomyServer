@@ -16,7 +16,7 @@ public interface UserMapper {
     Address findAllAddress(int uid);
     void modifyAddress(Address address);
     String findID(@Param("name")String name,@Param("email") String email);
-    void modifyPW(String password,int uid);
+    void modifyPW(@Param("changePW")String password,@Param("uid")int uid);
     UserProfile findUserProfile(int uid);
     void deleteUser(int uid);
 }

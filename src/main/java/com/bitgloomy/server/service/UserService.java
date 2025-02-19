@@ -65,7 +65,15 @@ public class UserService {
         Address address = new Address();
         address.setUserUid(foundUser.getUid());
         address.setAddress1(requestJoinDTO.getAddress());
+        address.setAddress2("");
+        address.setAddress3("");
+        address.setAddress4("");
+        address.setAddress5("");
         address.setPostcode1(requestJoinDTO.getPostcode());
+        address.setPostcode2("");
+        address.setPostcode3("");
+        address.setPostcode4("");
+        address.setPostcode5("");
         userMapper.saveAddress(address);
     }
     public Address findAllAddress(int uid) throws Exception {

@@ -3,10 +3,7 @@ package com.bitgloomy.server.controller;
 import com.bitgloomy.server.domain.Cart;
 import com.bitgloomy.server.domain.Product;
 import com.bitgloomy.server.domain.ProductImg;
-import com.bitgloomy.server.dto.RequestAddCartDTO;
-import com.bitgloomy.server.dto.RequestDeleteSelectedCartDTO;
-import com.bitgloomy.server.dto.RequestModifyCartDTO;
-import com.bitgloomy.server.dto.RequestUploadProductDTO;
+import com.bitgloomy.server.dto.*;
 import com.bitgloomy.server.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +71,62 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @PatchMapping("/product")
+    public ResponseEntity<?> modifyProduct(@RequestPart(value = "mainImg") MultipartFile file, @RequestPart(value = "subImg") List<MultipartFile> files, @RequestPart(value = "modifyPInfo")RequestModifyProductDTO requestModifyProductDTO){
+        String mainImgURL;
+        List<String> subImgURL = new ArrayList<>();
+
+        try {
+            mainImgURL = productService.save(file);
+            for (int i=0;i<files.size();i++) {
+                String tempURL = productService.save(files.get(i));
+                subImgURL.add(i,tempURL);
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        Product product = new Product();
+        ProductImg productImg = new ProductImg();
+        product.setPname(requestModifyProductDTO.getPname());
+        product.setContents(requestModifyProductDTO.getContents());
+        product.setProductMaterial(requestModifyProductDTO.getProductMaterial());
+        product.setFabric(requestModifyProductDTO.getFabric());
+        product.setSize(requestModifyProductDTO.getSize());
+        product.setPrice(Integer.parseInt(requestModifyProductDTO.getPrice()));
+        product.setQuantity(Integer.parseInt(requestModifyProductDTO.getQuantity()));
+        product.setCategory(requestModifyProductDTO.getCategory());
+        product.setProductImg(productImg);
+        try {
+            productService.modifyProduct(product,requestModifyProductDTO.getModifyPname());
+            product.getProductImg().setSimilarProductName(requestModifyProductDTO.getSimilarProductName());
+            product.getProductImg().setImgURL(mainImgURL);
+            product.getProductImg().setSubImgUrl1(subImgURL.get(0));
+            product.getProductImg().setSubImgUrl2(subImgURL.get(1));
+            product.getProductImg().setSubImgUrl3(subImgURL.get(2));
+            product.getProductImg().setSubImgUrl4(subImgURL.get(3));
+            product.getProductImg().setSubImgUrl5(subImgURL.get(4));
+            product.getProductImg().setSubImgUrl6(subImgURL.get(5));
+            product.getProductImg().setSubImgUrl7(subImgURL.get(6));
+            product.getProductImg().setSubImgUrl8(subImgURL.get(7));
+            product.getProductImg().setSubImgUrl9(subImgURL.get(8));
+            product.getProductImg().setSubImgUrl10(subImgURL.get(9));
+            productService.modifyProductImg(product);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @DeleteMapping("/product/{pname}")
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "pname")String pname){
+        try {
+            productService.deleteProduct(pname);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
     @GetMapping("/products")

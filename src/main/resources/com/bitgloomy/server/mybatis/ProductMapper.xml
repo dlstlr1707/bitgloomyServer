@@ -63,10 +63,25 @@
         INSERT INTO product(pname,contents,product_material,fabric,size,price,quantity,category)
         VALUES(#{pname},#{contents},#{productMaterial},#{fabric},#{size},#{price},#{quantity},#{category});
     </insert>
+    <update id="modifyProduct">
+        UPDATE product
+        SET pname = #{pname}, contents = #{contents}, product_material = #{productMaterial}, fabric = #{fabric}, size = #{size}, price = #{price}, quantity = #{quantity}, category = #{category}
+        WHERE uid = #{uid};
+    </update>
+    <update id="deleteProduct">
+        UPDATE product
+        SET deleteyn = 'y'
+        WHERE uid = #{uid};
+    </update>
     <insert id="saveProductImg">
         INSERT INTO product_img(product_uid,similar_product_name,similar_img_url,img_url,sub_img_url_1,sub_img_url_2,sub_img_url_3,sub_img_url_4,sub_img_url_5,sub_img_url_6,sub_img_url_7,sub_img_url_8,sub_img_url_9,sub_img_url_10)
         VALUES(#{productImg.uid},#{productImg.similarProductName},#{productImg.similarImgUrl},#{productImg.imgURL},#{productImg.subImgUrl1},#{productImg.subImgUrl2},#{productImg.subImgUrl3},#{productImg.subImgUrl4},#{productImg.subImgUrl5},#{productImg.subImgUrl6},#{productImg.subImgUrl7},#{productImg.subImgUrl8},#{productImg.subImgUrl9},#{productImg.subImgUrl10});
     </insert>
+    <update id="modifyProductImg">
+        UPDATE product_img
+        SET similar_product_name = #{productImg.similarProductName}, similar_img_url = #{productImg.similarImgUrl}, img_url = #{productImg.imgURL}, sub_img_url_1 = #{productImg.subImgUrl1}, sub_img_url_2 = #{productImg.subImgUrl2}, sub_img_url_3 = #{productImg.subImgUrl3}, sub_img_url_4 = #{productImg.subImgUrl4}, sub_img_url_5 = #{productImg.subImgUrl5}, sub_img_url_6 = #{productImg.subImgUrl6}, sub_img_url_7 = #{productImg.subImgUrl7}, sub_img_url_8 = #{productImg.subImgUrl8}, sub_img_url_9 = #{productImg.subImgUrl9}, sub_img_url_10 = #{productImg.subImgUrl10}
+        WHERE product_uid = #{uid};
+    </update>
     <select id="findProductByPname" resultMap="productMap">
         SELECT product.*,product_img.similar_product_name, product_img.similar_img_url,product_img.img_url, product_img.sub_img_url_1, product_img.sub_img_url_2, product_img.sub_img_url_3, product_img.sub_img_url_4, product_img.sub_img_url_5, product_img.sub_img_url_6, product_img.sub_img_url_7, product_img.sub_img_url_8, product_img.sub_img_url_9, product_img.sub_img_url_10
         FROM product

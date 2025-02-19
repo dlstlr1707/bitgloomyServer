@@ -9,7 +9,10 @@ import java.util.ArrayList;
 @Mapper
 public interface ProductMapper {
     void saveProduct(Product product);
+    void modifyProduct(Product product);
+    void deleteProduct(int uid);
     void saveProductImg(Product product);
+    void modifyProductImg(Product product);
     Product findProductByPname(String pname);
     Product findProductUidByPname(String pname);
     ArrayList<Product> findAllProducts();
