@@ -22,6 +22,7 @@
             </otherwise>
         </choose>
         WHERE deleteyn = 'n'
+        ORDER BY uid DESC
         LIMIT #{limitNum} OFFSET #{offsetNum};
     </select>
     <select id="findNotice" resultMap="noticeMap">

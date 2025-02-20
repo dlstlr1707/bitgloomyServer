@@ -57,15 +57,51 @@ public class ProductController {
             product.getProductImg().setSimilarProductName(requestUploadProductDTO.getSimilarProductName());
             product.getProductImg().setImgURL(mainImgURL);
             product.getProductImg().setSubImgUrl1(subImgURL.get(0));
-            product.getProductImg().setSubImgUrl2(subImgURL.get(1));
-            product.getProductImg().setSubImgUrl3(subImgURL.get(2));
-            product.getProductImg().setSubImgUrl4(subImgURL.get(3));
-            product.getProductImg().setSubImgUrl5(subImgURL.get(4));
-            product.getProductImg().setSubImgUrl6(subImgURL.get(5));
-            product.getProductImg().setSubImgUrl7(subImgURL.get(6));
-            product.getProductImg().setSubImgUrl8(subImgURL.get(7));
-            product.getProductImg().setSubImgUrl9(subImgURL.get(8));
-            product.getProductImg().setSubImgUrl10(subImgURL.get(9));
+            if(subImgURL.size()>1 && subImgURL.get(1)!=null){
+                product.getProductImg().setSubImgUrl2(subImgURL.get(1));
+            }else{
+                product.getProductImg().setSubImgUrl2("");
+            }
+            if(subImgURL.size()>2 && subImgURL.get(2)!=null){
+                product.getProductImg().setSubImgUrl3(subImgURL.get(2));
+            }else{
+                product.getProductImg().setSubImgUrl3("");
+            }
+            if(subImgURL.size()>3 && subImgURL.get(3)!=null){
+                product.getProductImg().setSubImgUrl4(subImgURL.get(3));
+            }else{
+                product.getProductImg().setSubImgUrl4("");
+            }
+            if(subImgURL.size()>4 && subImgURL.get(4)!=null){
+                product.getProductImg().setSubImgUrl5(subImgURL.get(4));
+            }else{
+                product.getProductImg().setSubImgUrl5("");
+            }
+            if(subImgURL.size()>5 && subImgURL.get(5)!=null){
+                product.getProductImg().setSubImgUrl6(subImgURL.get(5));
+            }else{
+                product.getProductImg().setSubImgUrl6("");
+            }
+            if(subImgURL.size()>6 && subImgURL.get(6)!=null){
+                product.getProductImg().setSubImgUrl7(subImgURL.get(6));
+            }else{
+                product.getProductImg().setSubImgUrl7("");
+            }
+            if(subImgURL.size()>7 && subImgURL.get(7)!=null){
+                product.getProductImg().setSubImgUrl8(subImgURL.get(7));
+            }else{
+                product.getProductImg().setSubImgUrl8("");
+            }
+            if(subImgURL.size()>8 && subImgURL.get(8)!=null){
+                product.getProductImg().setSubImgUrl9(subImgURL.get(8));
+            }else{
+                product.getProductImg().setSubImgUrl9("");
+            }
+            if(subImgURL.size()>9 && subImgURL.get(9)!=null){
+                product.getProductImg().setSubImgUrl10(subImgURL.get(9));
+            }else{
+                product.getProductImg().setSubImgUrl10("");
+            }
             productService.saveProductImg(product);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
@@ -103,15 +139,51 @@ public class ProductController {
             product.getProductImg().setSimilarProductName(requestModifyProductDTO.getSimilarProductName());
             product.getProductImg().setImgURL(mainImgURL);
             product.getProductImg().setSubImgUrl1(subImgURL.get(0));
-            product.getProductImg().setSubImgUrl2(subImgURL.get(1));
-            product.getProductImg().setSubImgUrl3(subImgURL.get(2));
-            product.getProductImg().setSubImgUrl4(subImgURL.get(3));
-            product.getProductImg().setSubImgUrl5(subImgURL.get(4));
-            product.getProductImg().setSubImgUrl6(subImgURL.get(5));
-            product.getProductImg().setSubImgUrl7(subImgURL.get(6));
-            product.getProductImg().setSubImgUrl8(subImgURL.get(7));
-            product.getProductImg().setSubImgUrl9(subImgURL.get(8));
-            product.getProductImg().setSubImgUrl10(subImgURL.get(9));
+            if(subImgURL.size()>1 && subImgURL.get(1)!=null){
+                product.getProductImg().setSubImgUrl2(subImgURL.get(1));
+            }else{
+                product.getProductImg().setSubImgUrl2("");
+            }
+            if(subImgURL.size()>2 && subImgURL.get(2)!=null){
+                product.getProductImg().setSubImgUrl3(subImgURL.get(2));
+            }else{
+                product.getProductImg().setSubImgUrl3("");
+            }
+            if(subImgURL.size()>3 && subImgURL.get(3)!=null){
+                product.getProductImg().setSubImgUrl4(subImgURL.get(3));
+            }else{
+                product.getProductImg().setSubImgUrl4("");
+            }
+            if(subImgURL.size()>4 && subImgURL.get(4)!=null){
+                product.getProductImg().setSubImgUrl5(subImgURL.get(4));
+            }else{
+                product.getProductImg().setSubImgUrl5("");
+            }
+            if(subImgURL.size()>5 && subImgURL.get(5)!=null){
+                product.getProductImg().setSubImgUrl6(subImgURL.get(5));
+            }else{
+                product.getProductImg().setSubImgUrl6("");
+            }
+            if(subImgURL.size()>6 && subImgURL.get(6)!=null){
+                product.getProductImg().setSubImgUrl7(subImgURL.get(6));
+            }else{
+                product.getProductImg().setSubImgUrl7("");
+            }
+            if(subImgURL.size()>7 && subImgURL.get(7)!=null){
+                product.getProductImg().setSubImgUrl8(subImgURL.get(7));
+            }else{
+                product.getProductImg().setSubImgUrl8("");
+            }
+            if(subImgURL.size()>8 && subImgURL.get(8)!=null){
+                product.getProductImg().setSubImgUrl9(subImgURL.get(8));
+            }else{
+                product.getProductImg().setSubImgUrl9("");
+            }
+            if(subImgURL.size()>9 && subImgURL.get(9)!=null){
+                product.getProductImg().setSubImgUrl10(subImgURL.get(9));
+            }else{
+                product.getProductImg().setSubImgUrl10("");
+            }
             productService.modifyProductImg(product);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
